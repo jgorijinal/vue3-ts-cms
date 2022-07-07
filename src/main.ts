@@ -4,6 +4,8 @@ import router from "@/router";
 import store from "@/store";
 import { registerApp } from "@/global";
 import hyRequest from "./service";
+import "normalize.css";
+import "./assets/css/index.less";
 
 const app = createApp(App);
 registerApp(app);
