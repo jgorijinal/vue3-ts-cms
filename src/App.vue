@@ -1,16 +1,22 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div>
+    counter:{{ $store.state.counter }}
+    <router-link to="/home">首页</router-link>
+    <router-link to="/login">登录</router-link>
+    <El-button>按钮</El-button>
+    <El-button type="success">按钮</El-button>
+    <El-button type="warning">按钮</El-button>
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
 
 export default defineComponent({
   name: "App",
-  components: {
-    HelloWorld,
+  mounted() {
+    console.log(this.$store.state.counter);
   },
 });
 </script>
