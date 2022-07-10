@@ -45,7 +45,6 @@ export default class HYRequest {
             background: "rgba(0,0,0,0.5)",
           });
         }
-        console.log("所有实例都有的拦截器 : 请求拦截成功");
         return config;
       },
       (err) => {
@@ -55,7 +54,6 @@ export default class HYRequest {
     );
     this.instance.interceptors.response.use(
       (res) => {
-        console.log("所有实例都有的拦截器 : 响应成功拦截");
         this.loadingInstance?.close();
         // 第二种 : 根据 returnCode 显示不同的错误信息
         const data = res.data;

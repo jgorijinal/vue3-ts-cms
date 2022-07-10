@@ -14,6 +14,18 @@ import {
   ElTabPane,
   ElTabs,
   ElIcon,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElCheckbox,
+  ElLink,
+  ElContainer,
+  ElHeader,
+  ElMain,
+  ElMenu,
+  ElMenuItem,
+  ElSubMenu,
+  ElMenuItemGroup,
 } from "element-plus";
 
 const components = [
@@ -28,6 +40,18 @@ const components = [
   ElTabPane,
   ElTabs,
   ElIcon,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElCheckbox,
+  ElLink,
+  ElContainer,
+  ElHeader,
+  ElMain,
+  ElMenu,
+  ElMenuItem,
+  ElSubMenu,
+  ElMenuItemGroup,
 ];
 
 export function registerElement(app: App): void {
