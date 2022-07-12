@@ -2,7 +2,7 @@
   <div class="nav-menu">
     <div class="logo">
       <img class="img" src="~@/assets/img/logo.svg" alt="logo" />
-      <span class="title">Vue3 + TS</span>
+      <span v-if="!collapse" class="title">Vue3 + TS</span>
     </div>
     <el-menu
       default-active="1"
@@ -10,6 +10,7 @@
       background-color="#0c2135"
       text-color="#b7bdc3"
       active-text-color="#0a60bd"
+      :collapse="collapse"
     >
       <template v-for="item in userMenus" :key="item.id">
         <template v-if="item.type === 1">
@@ -24,7 +25,9 @@
               <span>{{ item.name }}</span>
             </template>
             <template v-for="child in item.children" :key="child.id">
-              <el-menu-item :index="`${child.id}`"
+              <el-menu-item
+                :index="`${child.id}`"
+                @click="handleMenuItemClick(child)"
                 >{{ child.name }}
               </el-menu-item>
             </template>
@@ -45,12 +48,29 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useStore } from "@/store";
+import { useRouter } from "vue-router";
 export default defineComponent({
+  props: {
+    collapse: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup() {
     const store = useStore();
+    const router = useRouter();
+
     const userMenus = store.state.login.userMenus;
+
+    const handleMenuItemClick = (child: any) => {
+      router.push({
+        path: child.url ?? "/not-found",
+      });
+    };
+
     return {
       userMenus,
+      handleMenuItemClick,
     };
   },
 });
@@ -104,5 +124,8 @@ export default defineComponent({
 .el-menu-vertical:not(.el-menu--collapse) {
   width: 100%;
   height: calc(100% - 48px);
+}
+.el-menu {
+  border-right: none;
 }
 </style>

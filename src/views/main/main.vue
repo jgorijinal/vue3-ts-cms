@@ -1,22 +1,44 @@
 <template>
   <div class="main">
     <el-container class="main-content">
-      <el-aside width="200px"><nav-menu /></el-aside>
+      <el-aside :width="isCollapse ? '64px' : '220px'"
+        ><nav-menu :collapse="isCollapse"
+      /></el-aside>
       <el-container class="page">
-        <el-header class="page-header"> header </el-header>
-        <el-main class="page-content"> Main </el-main>
+        <el-header class="page-header">
+          <nav-header @foldChange="handleFoldChange"
+        /></el-header>
+        <el-main class="page-content">
+          <div class="router-view">
+            <router-view></router-view>
+          </div>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
-
 <script lang="ts">
 import NavMenu from "@/components/nav-menu";
-export default {
+import NavHeader from "@/components/nav-header";
+import { defineComponent, ref } from "vue";
+
+export default defineComponent({
   components: {
     NavMenu,
+    NavHeader,
   },
-};
+  setup() {
+    const isCollapse = ref(false);
+    const handleFoldChange = (isFold: boolean) => {
+      isCollapse.value = isFold;
+      console.log(isCollapse.value);
+    };
+    return {
+      handleFoldChange,
+      isCollapse,
+    };
+  },
+});
 </script>
 
 <style lang="less" scoped>
@@ -56,7 +78,7 @@ export default {
   text-align: left;
   cursor: pointer;
   background-color: #001529;
-  transition: width 0.3s linear;
+  transition: width 0.25s ease;
   scrollbar-width: none; /* firefox */
   -ms-overflow-style: none; /* IE 10+ */
 
@@ -69,5 +91,8 @@ export default {
   color: #333;
   text-align: center;
   background-color: #f0f2f5;
+}
+.router-view {
+  background: white;
 }
 </style>
