@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
+let firstMenu: any = null;
 export default function mapMenusToRoutes(userMenus: any): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = [];
   // 1.先默认加载所有的 routes
@@ -19,6 +20,9 @@ export default function mapMenusToRoutes(userMenus: any): RouteRecordRaw[] {
         if (route) {
           routes.push(route);
         }
+        if (!firstMenu) {
+          firstMenu = menu; //保存 firstMenu
+        }
       } else {
         _recurseGetRoute(menu.children);
       }
@@ -28,4 +32,38 @@ export default function mapMenusToRoutes(userMenus: any): RouteRecordRaw[] {
   _recurseGetRoute(userMenus);
 
   return routes;
+}
+
+export function mapPathToMenu(userMenus: any[], path: string): any {
+  for (const menu of userMenus) {
+    if (menu.type === 1) {
+      const findMenu = mapPathToMenu(menu.children, path);
+      if (findMenu) {
+        return findMenu;
+      }
+    } else if (menu.type === 2 && menu.url === path) {
+      return menu;
+    }
+  }
+}
+
+export { firstMenu };
+
+import { IBreadcrumb } from "./../base-ui/breadcrumb/types";
+export function mapPathToBreadcrumb(
+  userMenus: any[],
+  currentPath: string
+): any {
+  const breadcrumbs: IBreadcrumb[] = [];
+  userMenus.forEach((menu) => {
+    if (currentPath.includes(menu.url)) {
+      breadcrumbs.push({ name: menu.name });
+      menu.children.forEach((child: any) => {
+        if (child.url === currentPath) {
+          breadcrumbs.push({ name: child.name });
+        }
+      });
+    }
+  });
+  return breadcrumbs;
 }

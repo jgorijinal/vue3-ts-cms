@@ -1,5 +1,6 @@
 export interface IFormItems {
   type: "input" | "password" | "select" | "datePicker";
+  field: string;
   label?: string;
   rules?: any[];
   placeholder?: string;

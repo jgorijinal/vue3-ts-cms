@@ -10,9 +10,10 @@ import { setupStore } from "./store";
 const app = createApp(App);
 registerApp(app);
 app.use(store);
-app.use(router);
 
 setupStore(); //每次刷新页面会被调用
+app.use(router);
+
 app.mount("#app");
 
 // console.log(process.env);

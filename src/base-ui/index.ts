@@ -1,3 +1,3 @@
-import HyForm from "./src/form.vue";
+import HyForm from "./form/src/form.vue";
 
 export default HyForm;

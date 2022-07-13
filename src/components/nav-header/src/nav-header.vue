@@ -3,7 +3,7 @@
     <el-icon class="fold" v-if="!isFold" @click="handleFold"><Fold /></el-icon>
     <el-icon class="fold" v-else @click="handleFold"><Expand /></el-icon>
     <div class="actions">
-      <div>面包屑</div>
+      <div><hy-breadcrumb :breadcrumbs="breadcrumbs" /></div>
       <div class="info">
         <el-avatar :icon="UserFilled" />
         <el-dropdown>
@@ -28,8 +28,14 @@
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { UserFilled } from "@element-plus/icons-vue";
+import HyBreadcrumb from "@/base-ui/breadcrumb/src/breadcrumb.vue";
+import { useRoute } from "vue-router";
+import { mapPathToBreadcrumb } from "@/utils/map-menus";
 
 export default defineComponent({
+  components: {
+    HyBreadcrumb,
+  },
   emits: ["foldChange"],
   setup(props, { emit }) {
     const isFold = ref<boolean>(false);
@@ -40,11 +46,22 @@ export default defineComponent({
       emit("foldChange", isFold.value);
     };
     const username = computed(() => store.state.login.userInfo.name);
+
+    // 面包屑
+    const route = useRoute();
+
+    const breadcrumbs = computed(() => {
+      const userMenus = computed(() => store.state.login.userMenus);
+      const currentPath = route.path;
+      return mapPathToBreadcrumb(userMenus.value, currentPath);
+    });
+    console.log(breadcrumbs);
     return {
       isFold,
       handleFold,
       username,
       UserFilled,
+      breadcrumbs,
     };
   },
 });
