@@ -37,6 +37,8 @@ import {
   ElDatePicker,
   ElBreadcrumb,
   ElBreadcrumbItem,
+  ElTableColumn,
+  ElPagination,
 } from "element-plus";
 
 const components = [
@@ -74,6 +76,8 @@ const components = [
   ElDatePicker,
   ElBreadcrumb,
   ElBreadcrumbItem,
+  ElTableColumn,
+  ElPagination,
 ];
 
 export function registerElement(app: App): void {

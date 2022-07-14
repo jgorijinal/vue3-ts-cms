@@ -1,5 +1,10 @@
 <template>
   <div class="form">
+    <div class="header">
+      <slot name="form-header">
+        <h2>高级检索</h2>
+      </slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
         <template v-for="item in formItems" :key="item.label">
