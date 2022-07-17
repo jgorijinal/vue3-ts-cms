@@ -37,7 +37,7 @@
     </el-table>
     <div class="footer">
       <slot name="table-footer">
-        <el-pagination
+        <!-- <el-pagination
           v-model:currentPage="currentPage4"
           v-model:page-size="pageSize4"
           :page-sizes="[100, 200, 300, 400]"
@@ -48,7 +48,7 @@
           :total="400"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-        />
+        /> -->
       </slot>
     </div>
   </div>
@@ -65,7 +65,7 @@ export default defineComponent({
     },
     propList: {
       type: Array as PropType<IPropList[]>,
-      required: true,
+      // required: true,
     },
     showIndexColumn: {
       type: Boolean,

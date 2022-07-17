@@ -1,9 +1,7 @@
 <template>
   <div class="form">
     <div class="header">
-      <slot name="form-header">
-        <h2>高级检索</h2>
-      </slot>
+      <slot name="header"></slot>
     </div>
     <el-form :label-width="labelWidth">
       <el-row>
@@ -15,11 +13,18 @@
               >
                 <el-input
                   :show-password="item.type === 'password'"
-                  v-model="formData[item.field]"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
+                  :placeholder="item.placeholder"
                 ></el-input>
               </template>
               <template v-else-if="item.type === 'select'">
-                <el-select style="width: 100%" v-model="formData[item.field]">
+                <el-select
+                  style="width: 100%"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
+                  :placeholder="item.placeholder"
+                >
                   <el-option
                     v-for="option in item.selectOptions"
                     :key="option.value"
@@ -32,7 +37,8 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.datePickerOptions"
-                  v-model="formData[item.field]"
+                  :model-value="modelValue[item.field]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -40,6 +46,9 @@
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
@@ -66,8 +75,8 @@ export default defineComponent({
     colLayout: {
       type: Object,
       default: () => ({
-        xl: 6,
-        lg: 6,
+        xl: 8,
+        lg: 8,
         md: 8,
         sm: 12,
         xs: 24,
@@ -76,15 +85,13 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, context) {
-    const formData = ref({ ...props.modelValue });
-    watch(
-      formData,
-      (newValue) => {
-        context.emit("update:modelValue", newValue);
-      },
-      { deep: true }
-    );
-    return { formData };
+    const handleValueChange = (value: any, field: string) => {
+      context.emit(
+        "update:modelValue",
+        Object.assign({ ...props.modelValue }, { [`${field}`]: value })
+      );
+    };
+    return { handleValueChange };
   },
 });
 </script>

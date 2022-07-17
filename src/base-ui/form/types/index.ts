@@ -12,7 +12,7 @@ export interface IFormItems {
 
 interface ISelectOptions {
   label: string;
-  value: string;
+  value: any;
 }
 interface IDatePickerOptions {
   startPlaceholder: string;

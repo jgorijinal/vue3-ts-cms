@@ -4,33 +4,48 @@ export const searchFormConfig: formConfig = {
   formItems: [
     {
       type: "input",
-      label: "用户名",
-      field: "name",
+      label: "id",
+      field: "id",
+      placeholder: "请输入id",
     },
     {
-      type: "password",
-      label: "密码",
-      field: "password",
+      type: "input",
+      label: "用户名",
+      field: "name",
+      placeholder: "请输入用户名",
+    },
+    {
+      type: "input",
+      label: "真实姓名",
+      field: "realname",
+      placeholder: "请输入真实姓名",
+    },
+    {
+      type: "input",
+      label: "手机号",
+      field: "cellphone",
+      placeholder: "请输入手机号",
     },
     {
       type: "select",
-      label: "喜欢的运动",
-      field: "sports",
+      label: "用户状态",
+      field: "enable",
+      placeholder: "请选择用户状态",
       selectOptions: [
         {
-          label: "篮球",
-          value: "basketball",
+          label: "启用",
+          value: 1,
         },
         {
-          label: "足球",
-          value: "soccer",
+          label: "禁用",
+          value: 0,
         },
       ],
     },
     {
       type: "datePicker",
       label: "日期",
-      field: "createTime",
+      field: "createAt",
       datePickerOptions: {
         startPlaceholder: "开始时间",
         endPlaceholder: "结束时间",
@@ -41,8 +56,8 @@ export const searchFormConfig: formConfig = {
   labelWidth: "100px",
   formItemStyle: { padding: "10px 20px" },
   colLayout: {
-    xl: 6,
-    lg: 6,
+    xl: 8,
+    lg: 8,
     md: 8,
     sm: 12,
     xs: 24,

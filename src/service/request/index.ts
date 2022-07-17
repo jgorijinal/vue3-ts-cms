@@ -56,22 +56,22 @@ export default class HYRequest {
       (res) => {
         this.loadingInstance?.close();
         // 第二种 : 根据 returnCode 显示不同的错误信息
-        const data = res.data;
-        if (data.returnCode === "-1001") {
-          console.log("界面上显示错误信息");
-        } else {
-          return res.data;
-        }
+        // const data = res.data;
+        // if (data.returnCode === "-1001") {
+        //   console.log("界面上显示错误信息");
+        // } else {
+        //   return res.data;
+        // }
+        return res.data;
       },
       (err) => {
         console.log("所有实例都有的拦截器 : 响应失败拦截");
 
         this.loadingInstance?.close();
-
         // 第一种:
         // 判断不同的 HTTPErrorCode 显示不同的信息
-        if (err.response.status === 404) {
-          console.log("404的错误");
+        if (err.response.status === 401) {
+          console.log("401的错误");
         }
         return err;
       }
