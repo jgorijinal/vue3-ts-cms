@@ -1,15 +1,13 @@
 <template>
   <div class="page-content">
-    <hy-table :tableData="dataList" v-bind="contentTableConfig">
+    <hy-table
+      :tableData="dataList"
+      v-bind="contentTableConfig"
+      :total="dataCount"
+      v-model:page="pageInfo"
+    >
       <template #header-handler>
-        <el-button type="primary">新建用户</el-button>
-      </template>
-      <template #status="scope">
-        <el-button
-          size="small"
-          :type="scope.row.enable === 1 ? 'success' : 'danger'"
-          >{{ scope.row.enable === 1 ? "启用" : "禁用" }}</el-button
-        >
+        <el-button type="primary" v-if="isCreate">新建用户</el-button>
       </template>
       <template #createAt="scope">
         {{ $filters.formatTime(scope.row.createAt) }}
@@ -19,22 +17,33 @@
       </template>
       <template #handler>
         <div class="handler-btns">
-          <el-button text type="primary">
+          <el-button text type="primary" v-if="isUpdate">
             <el-icon size="default"><Edit /></el-icon>编辑</el-button
           >
-          <el-button text type="primary"
+          <el-button text type="primary" v-if="isDelete"
             ><el-icon size="default"><Delete /></el-icon>删除</el-button
           >
         </div>
+      </template>
+      <!--动态添加插槽-->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
       </template>
     </hy-table>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref, watch } from "vue";
 import HyTable from "@/base-ui/table";
 import { useStore } from "@/store";
+import usePermissions from "@/hooks/use-permissions";
 export default defineComponent({
   components: {
     HyTable,
@@ -50,27 +59,61 @@ export default defineComponent({
     },
   },
   setup(props) {
+    // 验证按钮的权限
+    const isCreate = usePermissions(props.pageName, "create");
+    const isDelete = usePermissions(props.pageName, "delete");
+    const isUpdate = usePermissions(props.pageName, "update");
+    const isQuery = usePermissions(props.pageName, "query");
+
+    // 分页器
+    const pageInfo = ref({ currentPage: 1, pageSize: 10 });
+
+    watch(pageInfo, () => {
+      getPageData();
+    });
+
+    //网络请求
     const store = useStore();
     const getPageData = (queryInfo: any = {}) => {
+      if (!isQuery) return;
       store.dispatch("system/getPageListAction", {
         pageName: props.pageName,
         queryInfo: {
-          offset: "0",
-          size: 10,
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
+          size: pageInfo.value.pageSize,
           ...queryInfo,
         },
       });
     };
     getPageData();
-    // const userList = computed(() => store.state.system.userList);
-    // const userCount = computed(() => store.state.system.userCount);
 
+    // Vuex 中获取数据
     const dataList = computed(() =>
       store.getters["system/pageListData"](props.pageName)
     );
+    const dataCount = computed(() =>
+      store.getters["system/pageListCount"](props.pageName)
+    );
+
+    // 动态获取(除了固定的插槽)插槽名称
+    const otherPropSlots = props.contentTableConfig.propList.filter(
+      (item: any) => {
+        if (item.slotName === "createAt") return false;
+        if (item.slotName === "updateAt") return false;
+        if (item.slotName === "handler") return false;
+        return true;
+      }
+    );
+
     return {
       dataList,
+      dataCount,
       getPageData,
+      pageInfo,
+      otherPropSlots,
+      isCreate,
+      isDelete,
+      isUpdate,
     };
   },
 });

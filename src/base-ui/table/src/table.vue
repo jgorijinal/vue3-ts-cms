@@ -13,6 +13,7 @@
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <el-table-column
         v-if="showSelectColumn"
@@ -26,29 +27,26 @@
         align="center"
       ></el-table-column>
       <template v-for="item in propList" :key="item.prop">
-        <el-table-column align="center" v-bind="item">
+        <el-table-column align="center" v-bind="item" show-overflow-tooltip>
           <template #default="scope">
             <slot :name="item.slotName" :row="scope.row">
-              {{ scope.row[item.prop ? item.prop : ""] }}
+              {{ scope.row[item.prop ? item.prop : "无"] }}
             </slot>
           </template>
         </el-table-column>
       </template>
     </el-table>
-    <div class="footer">
+    <div class="footer" v-if="showFooter">
       <slot name="table-footer">
-        <!-- <el-pagination
-          v-model:currentPage="currentPage4"
-          v-model:page-size="pageSize4"
-          :page-sizes="[100, 200, 300, 400]"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
+        <el-pagination
+          :currentPage="page.currentPage"
+          :page-size="page.pageSize"
+          :page-sizes="[10, 20, 30]"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-        /> -->
+        />
       </slot>
     </div>
   </div>
@@ -79,14 +77,38 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    total: {
+      type: Number,
+      default: 0,
+    },
+    page: {
+      type: Object,
+      default: () => ({ currentPage: 1, pageSize: 10 }),
+    },
+    childrenProps: {
+      type: Object,
+      default: () => ({}),
+    },
+    showFooter: {
+      type: Boolean,
+      default: true,
+    },
   },
-  emits: ["selectionChange"],
+  emits: ["selectionChange", "update:page"],
   setup(props, { emit }) {
     const handleSelectionChange = (value: any) => {
       emit("selectionChange", value);
     };
+    const handleSizeChange = (pageSize: number) => {
+      emit("update:page", { ...props.page, pageSize: pageSize });
+    };
+    const handleCurrentChange = (currentPage: number) => {
+      emit("update:page", { ...props.page, currentPage: currentPage });
+    };
     return {
       handleSelectionChange,
+      handleSizeChange,
+      handleCurrentChange,
     };
   },
 });
@@ -109,5 +131,8 @@ export default defineComponent({
   display: flex;
   justify-content: flex-end;
   padding: 6px 6px;
+}
+.el-table__indent {
+  padding-left: 0px;
 }
 </style>

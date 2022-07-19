@@ -10,6 +10,7 @@ import { IAccount } from "@/service/login/type";
 import localCache from "@/utils/cache";
 import router from "@/router";
 import mapMenusToRoutes from "@/utils/map-menus";
+import { mapMenuToPermissions } from "@/utils/map-menus";
 
 const loginModule: Module<ILoginState, IRootState> = {
   namespaced: true,
@@ -18,6 +19,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       token: "",
       userInfo: {},
       userMenus: [],
+      permissions: [],
     };
   },
   getters: {},
@@ -38,6 +40,10 @@ const loginModule: Module<ILoginState, IRootState> = {
       routes.forEach((route) => {
         router.addRoute("main", route);
       });
+
+      // 获取权限按钮数组
+      const permissions = mapMenuToPermissions(userMenus);
+      state.permissions = permissions;
     },
   },
   actions: {

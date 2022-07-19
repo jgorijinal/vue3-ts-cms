@@ -67,3 +67,20 @@ export function mapPathToBreadcrumb(
   });
   return breadcrumbs;
 }
+
+export function mapMenuToPermissions(userMenus: any[]) {
+  const permissions: string[] = [];
+
+  const _recurseGetPermissions = (userMenus: any[]) => {
+    for (const item of userMenus) {
+      if (item.type === 1 || item.type === 2) {
+        _recurseGetPermissions(item.children ?? []);
+      } else if (item.type === 3) {
+        permissions.push(item.permission);
+      }
+    }
+  };
+  _recurseGetPermissions(userMenus);
+
+  return permissions;
+}

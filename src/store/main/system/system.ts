@@ -11,17 +11,21 @@ const systemModule: Module<ISystemState, IRootState> = {
       usersCount: 0,
       roleList: [],
       roleCount: 0,
+      goodsList: [],
+      goodsCount: 0,
+      menuList: [],
+      menuCount: 0,
     };
   },
   getters: {
     pageListData(state) {
       return (pageName: string) => {
-        switch (pageName) {
-          case "users":
-            return state.usersList;
-          case "role":
-            return state.roleList;
-        }
+        return (state as any)[`${pageName}List`];
+      };
+    },
+    pageListCount(state) {
+      return (pageName: string) => {
+        return (state as any)[`${pageName}Count`];
       };
     },
   },
@@ -37,6 +41,18 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changeRoleCount(state, count) {
       state.roleCount = count;
+    },
+    changeGoodsInfo(state, list) {
+      state.goodsList = list;
+    },
+    changeGoodsCount(state, count) {
+      state.goodsCount = count;
+    },
+    changeMenuInfo(state, list) {
+      state.menuList = list;
+    },
+    changeMenuCount(state, count) {
+      state.menuCount = count;
     },
   },
   actions: {
@@ -58,6 +74,15 @@ const systemModule: Module<ISystemState, IRootState> = {
         case "role":
           commit("changeRoleInfo", list);
           commit("changeRoleCount", totalCount);
+          break;
+        case "goods":
+          commit("changeGoodsInfo", list);
+          commit("changeGoodsCount", totalCount);
+          break;
+        case "menu":
+          commit("changeMenuInfo", list);
+          commit("changeMenuCount", totalCount);
+          break;
       }
     },
   },
