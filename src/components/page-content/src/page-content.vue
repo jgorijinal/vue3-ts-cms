@@ -7,7 +7,9 @@
       v-model:page="pageInfo"
     >
       <template #header-handler>
-        <el-button type="primary" v-if="isCreate">新建用户</el-button>
+        <el-button type="primary" v-if="isCreate" @click="handleCreateClick"
+          >新建用户</el-button
+        >
       </template>
       <template #createAt="scope">
         {{ $filters.formatTime(scope.row.createAt) }}
@@ -15,12 +17,21 @@
       <template #updateAt="scope">
         {{ $filters.formatTime(scope.row.updateAt) }}
       </template>
-      <template #handler>
+      <template #handler="scope">
         <div class="handler-btns">
-          <el-button text type="primary" v-if="isUpdate">
+          <el-button
+            text
+            type="primary"
+            v-if="isUpdate"
+            @click="handleEditClick(scope.row)"
+          >
             <el-icon size="default"><Edit /></el-icon>编辑</el-button
           >
-          <el-button text type="primary" v-if="isDelete"
+          <el-button
+            text
+            type="primary"
+            v-if="isDelete"
+            @click="handleDeleteClick(scope.row)"
             ><el-icon size="default"><Delete /></el-icon>删除</el-button
           >
         </div>
@@ -58,7 +69,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits: ["createBtnClick", "editBtnClick"],
+  setup(props, context) {
     // 验证按钮的权限
     const isCreate = usePermissions(props.pageName, "create");
     const isDelete = usePermissions(props.pageName, "delete");
@@ -104,7 +116,20 @@ export default defineComponent({
         return true;
       }
     );
-
+    // 删除操作
+    const handleDeleteClick = (item: any) => {
+      store.dispatch("system/deletePageDataAction", {
+        pageName: props.pageName,
+        id: item.id,
+      });
+    };
+    // 编辑 / 新建 按钮点击
+    const handleCreateClick = () => {
+      context.emit("createBtnClick");
+    };
+    const handleEditClick = (item: any) => {
+      context.emit("editBtnClick", item);
+    };
     return {
       dataList,
       dataCount,
@@ -114,6 +139,9 @@ export default defineComponent({
       isCreate,
       isDelete,
       isUpdate,
+      handleDeleteClick,
+      handleCreateClick,
+      handleEditClick,
     };
   },
 });

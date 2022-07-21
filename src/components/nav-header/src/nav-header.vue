@@ -15,7 +15,9 @@
             <el-dropdown-menu>
               <el-dropdown-item>个人信息</el-dropdown-item>
               <el-dropdown-item>系统管理</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item @click="handleLogoutClick"
+                >退出登录</el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -29,9 +31,9 @@ import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import { UserFilled } from "@element-plus/icons-vue";
 import HyBreadcrumb from "@/base-ui/breadcrumb/src/breadcrumb.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { mapPathToBreadcrumb } from "@/utils/map-menus";
-
+import localCache from "@/utils/cache";
 export default defineComponent({
   components: {
     HyBreadcrumb,
@@ -55,13 +57,20 @@ export default defineComponent({
       const currentPath = route.path;
       return mapPathToBreadcrumb(userMenus.value, currentPath);
     });
-    console.log(breadcrumbs);
+
+    //退出登录
+    const router = useRouter();
+    const handleLogoutClick = () => {
+      localCache.deleteCache("token");
+      router.push("/main");
+    };
     return {
       isFold,
       handleFold,
       username,
       UserFilled,
       breadcrumbs,
+      handleLogoutClick,
     };
   },
 });

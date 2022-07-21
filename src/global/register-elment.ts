@@ -40,6 +40,8 @@ import {
   ElTableColumn,
   ElPagination,
   ElImage,
+  ElDialog,
+  ElTree,
 } from "element-plus";
 
 const components = [
@@ -80,6 +82,8 @@ const components = [
   ElTableColumn,
   ElPagination,
   ElImage,
+  ElDialog,
+  ElTree,
 ];
 
 export function registerElement(app: App): void {

@@ -8,6 +8,7 @@ export interface IFormItems {
   selectOptions?: ISelectOptions[];
   //针对 datepicker
   datePickerOptions?: IDatePickerOptions;
+  isHidden?: boolean;
 }
 
 interface ISelectOptions {

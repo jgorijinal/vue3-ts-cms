@@ -7,7 +7,11 @@
       <el-row>
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
-            <el-form-item :label="item.label" :style="formItemStyle">
+            <el-form-item
+              v-if="!item.isHidden"
+              :label="item.label"
+              :style="formItemStyle"
+            >
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
@@ -53,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from "vue";
+import { defineComponent, PropType, computed } from "vue";
 import { IFormItems } from "@/base-ui/form/types";
 export default defineComponent({
   props: {
@@ -91,7 +95,9 @@ export default defineComponent({
         Object.assign({ ...props.modelValue }, { [`${field}`]: value })
       );
     };
-    return { handleValueChange };
+    return {
+      handleValueChange,
+    };
   },
 });
 </script>

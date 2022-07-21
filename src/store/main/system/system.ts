@@ -1,7 +1,12 @@
 import { Module } from "vuex";
 import { IRootState } from "./../../types";
 import { ISystemState } from "./types";
-import { getPageListData } from "./../../../service/main/system/system";
+import {
+  deletePageData,
+  getPageListData,
+  createPageData,
+  editPageData,
+} from "./../../../service/main/system/system";
 
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
@@ -84,6 +89,52 @@ const systemModule: Module<ISystemState, IRootState> = {
           commit("changeMenuCount", totalCount);
           break;
       }
+    },
+    async deletePageDataAction(context, payload) {
+      // 1. 获取删除 url : /users/4 做拼接
+      // pageName -> users
+      // id ->  4
+      const { pageName, id } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+      // 2. 发送删除网络请求
+      await deletePageData(pageUrl);
+      // 3. 重新拿到最新数据
+      context.dispatch("getPageListAction", {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
+    },
+    async createPageDataAction({ dispatch }, payload: any) {
+      const { pageName, newData } = payload;
+      const pageUrl = `/${pageName}`;
+
+      // 发送新建请求
+      await createPageData(pageUrl, newData);
+      // 重新获取最新列表数据
+      dispatch("getPageListAction", {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
+    },
+    async editPageDataAction({ dispatch }, payload) {
+      const { pageName, newData, id } = payload;
+      const pageUrl = `/${pageName}/${id}`;
+      //发送编辑请求
+      await editPageData(pageUrl, newData);
+      //重新获取最新列表数据
+      dispatch("getPageListAction", {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10,
+        },
+      });
     },
   },
 };
